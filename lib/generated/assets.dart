@@ -2,11 +2,36 @@
 class Assets {
   Assets._();
 
-  static const String imagesLamborghiniUrusSE20241 =
-      'assets/images/lamborghini-Urus-SE-2024-1.webp';
-  static const String imagesLamborghiniUrusSE20242 =
-      'assets/images/lamborghini-Urus-SE-2024-2.webp';
-  static const String imagesLamborghiniUrusSE20243 =
-      'assets/images/lamborghini-Urus-SE-2024-3.webp';
-  static const String logoLamborghini = 'assets/logo/lamborghini.png';
+  static const String imagesAudiRS71 = 'assets/images/Audi-RS7-1.webp';
+  static const String imagesAudiRS72 = 'assets/images/Audi-RS7-2.webp';
+  static const String imagesAudiRS73 = 'assets/images/Audi-RS7-3.webp';
+  static const String imagesBMWX5MCompetition1 =
+      'assets/images/BMW-X5-MCompetition-1.webp';
+  static const String imagesBMWX5MCompetition2 =
+      'assets/images/BMW-X5-MCompetition-2.webp';
+  static const String imagesBMWX5MCompetition3 =
+      'assets/images/BMW-X5-MCompetition-3.webp';
+  static const String imagesLamborghiniUrusSE1 =
+      'assets/images/Lamborghini-Urus-SE-1.webp';
+  static const String imagesLamborghiniUrusSE2 =
+      'assets/images/Lamborghini-Urus-SE-2.webp';
+  static const String imagesLamborghiniUrusSE3 =
+      'assets/images/Lamborghini-Urus-SE-3.webp';
+  static const String imagesMercedesGClass1 =
+      'assets/images/Mercedes-G-Class-1.webp';
+  static const String imagesMercedesGClass2 =
+      'assets/images/Mercedes-G-Class-2.webp';
+  static const String imagesMercedesGClass3 =
+      'assets/images/Mercedes-G-Class-3.webp';
+  static const String imagesPorscheCayenneCoupe1 =
+      'assets/images/Porsche-Cayenne-Coupe-1.webp';
+  static const String imagesPorscheCayenneCoupe2 =
+      'assets/images/Porsche-Cayenne-Coupe-2.webp';
+  static const String imagesPorscheCayenneCoupe3 =
+      'assets/images/Porsche-Cayenne-Coupe-3.webp';
+  static const String logoAudi = 'assets/logo/Audi.png';
+  static const String logoBMW = 'assets/logo/BMW.png';
+  static const String logoBenz = 'assets/logo/Benz.png';
+  static const String logoLamborghini = 'assets/logo/Lamborghini.png';
+  static const String logoPorsche = 'assets/logo/Porsche.png';
 }
