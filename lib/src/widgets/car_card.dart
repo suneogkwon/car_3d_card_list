@@ -51,9 +51,6 @@ class _CarCardState extends State<CarCard>
   /// 자동차 로고
   File get _logo => widget.car.logo;
 
-  /// 연식
-  int get _year => widget.car.year;
-
   /// 자동차 풀네임
   String get _name => widget.car.name;
 
@@ -277,15 +274,9 @@ class _CarCardState extends State<CarCard>
               ),
             ],
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('$_year'),
-              Text(
-                _name,
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-              ),
-            ],
+          child: Text(
+            _name,
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
           ),
         ),
       );
