@@ -1,7 +1,6 @@
-import 'dart:math';
+import 'dart:math' as math;
 
-import 'package:car_3d_card_list/generated/assets.dart';
-import 'package:car_3d_card_list/src/screens/car_detail_screen.dart';
+import 'package:car_3d_card_list/src/models/car_model.dart';
 import 'package:car_3d_card_list/src/utils/media_query_util.dart';
 import 'package:car_3d_card_list/src/utils/responsive_util.dart';
 import 'package:car_3d_card_list/src/widgets/car_card.dart';
@@ -10,14 +9,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 /// 자동차 카드를 그리드 형태로 보여주는 화면
-class CardListScreen extends StatefulWidget {
-  const CardListScreen({super.key});
+class CarListScreen extends StatefulWidget {
+  const CarListScreen({super.key});
 
   @override
-  State<CardListScreen> createState() => _CardListScreenState();
+  State<CarListScreen> createState() => _CarListScreenState();
 }
 
-class _CardListScreenState extends State<CardListScreen> {
+class _CarListScreenState extends State<CarListScreen> {
   /// breankpoint에 따라 그리드의 프로퍼티를 설정하여 delegate를 반환한다.
   SliverGridDelegate get _gridDelegate {
     final (
@@ -44,10 +43,27 @@ class _CardListScreenState extends State<CardListScreen> {
       MOBILE ||
       TABLET => EdgeInsets.symmetric(horizontal: 30.w, vertical: 30.w),
       _ => EdgeInsets.symmetric(
-        horizontal: max(30.w, (context.screenWidth - 1200) / 2),
+        horizontal: math.max(30.w, (context.screenWidth - 1200) / 2),
         vertical: 30.w,
       ),
     };
+  }
+
+  void _routeToDetailScreen(CarModel car) {
+    // TODO
+    // Navigator.push(
+    //   context,
+    //   PageRouteBuilder(
+    //     transitionDuration: const Duration(seconds: 1),
+    //     reverseTransitionDuration: const Duration(seconds: 1),
+    //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+    //       return FadeTransition(opacity: animation, child: child);
+    //     },
+    //     pageBuilder: (context, animation, secondaryAnimation) {
+    //       return CarDetailScreen(car: car);
+    //     },
+    //   ),
+    // );
   }
 
   @override
@@ -59,31 +75,17 @@ class _CardListScreenState extends State<CardListScreen> {
         padding: _gridPadding,
         gridDelegate: _gridDelegate,
         cacheExtent: 1,
-        itemBuilder:
-            (context, index) => CarCard(
-              imagePath: Assets.imagesLamborghiniUrusSE20241,
-              logoPath: Assets.logoLamborghini,
-              year: 2024,
-              name: 'Lamborghini Urus S E-Performance',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    transitionsBuilder: (
-                      context,
-                      animation,
-                      secondaryAnimation,
-                      child,
-                    ) {
-                      return child;
-                    },
-                    pageBuilder: (context, animation, secondaryAnimation) {
-                      return CarDetailScreen();
-                    },
-                  ),
-                );
-              },
-            ),
+        itemCount: cars.length,
+        itemBuilder: (context, index) {
+          final car = cars[index];
+
+          return CarCard(
+            car: car,
+            onTap: () {
+              _routeToDetailScreen(car);
+            },
+          );
+        },
       ),
     );
   }

@@ -1,3 +1,5 @@
+import 'package:car_3d_card_list/src/models/car_model.dart';
+import 'package:car_3d_card_list/src/screens/car_detail_screen.dart';
 import 'package:car_3d_card_list/src/screens/card_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -32,7 +34,7 @@ class Car3DCardApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: '3D Car Card',
-      home: const CardListScreen(),
+      home: CarListScreen(),
       themeMode: ThemeMode.dark,
       theme: ThemeData.light(),
       darkTheme: _darkTheme,

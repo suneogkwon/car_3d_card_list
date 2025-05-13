@@ -1,30 +1,22 @@
-import 'dart:developer';
+import 'dart:io';
 import 'dart:math' as math;
 import 'dart:ui';
 
+import 'package:car_3d_card_list/src/models/car_model.dart';
 import 'package:flutter/material.dart';
 
 /// 3D 자동차 카드 위젯
 class CarCard extends StatefulWidget {
   const CarCard({
     super.key,
-    required this.imagePath,
-    required this.logoPath,
-    required this.year,
-    required this.name,
+    required this.car,
     this.onTap,
     this.duration = const Duration(milliseconds: 400),
     this.curve = Curves.linearToEaseOut,
   });
 
-  /// 자동차 이미지 경로
-  final String imagePath;
-
-  /// 자동차 로고 경로
-  final String logoPath;
-
-  final int year;
-  final String name;
+  /// 자동차 모델
+  final CarModel car;
 
   /// 카드 클릭 시 호출되는 콜백
   final VoidCallback? onTap;
@@ -47,12 +39,23 @@ class _CarCardState extends State<CarCard>
   /// 호버 시 카드 크기 증가량
   final _hoverScaleIncrement = 0.12;
 
-  /// 카드 크기
   Size _size = Size.zero;
+  Offset _centerOffset = Offset.zero;
 
   bool _isHovered = false;
   Offset _pointerOffset = Offset.zero;
-  Offset _centerOffset = Offset.zero;
+
+  /// 자동차 대표 이미지
+  File get _image => widget.car.images.first;
+
+  /// 자동차 로고
+  File get _logo => widget.car.logo;
+
+  /// 연식
+  int get _year => widget.car.year;
+
+  /// 자동차 풀네임
+  String get _name => widget.car.name;
 
   /// 카드의 그림자 효과
   /// 포인터 호버 여부에 따라 그림자 크기와 흐림 정도가 달라지고 포인터 위치에 따라 오프셋이 달라진다.
@@ -201,10 +204,12 @@ class _CarCardState extends State<CarCard>
               borderRadius: _borderRadius,
               color: !_isHovered ? Colors.black38 : null,
             ),
-            child: Image.asset(
-              widget.imagePath,
-              fit: BoxFit.cover,
-              colorBlendMode: BlendMode.darken,
+            child: Hero(
+              tag: _image.path,
+              child: ClipRRect(
+                borderRadius: _borderRadius,
+                child: Image.asset(_image.path, fit: BoxFit.cover),
+              ),
             ),
           ),
         ),
@@ -221,16 +226,9 @@ class _CarCardState extends State<CarCard>
         borderRadius: _borderRadius,
         child: GestureDetector(
           onTap: widget.onTap,
-          onPanStart: (details) {
-            _startHover();
-          },
-          onPanUpdate: (details) {
-            log('Pan Update: ${details.localPosition}');
-            _updatePointerOffset(details.localPosition);
-          },
-          onPanEnd: (details) {
-            _stopHover();
-          },
+          onPanStart: (details) => _startHover(),
+          onPanUpdate: (details) => _updatePointerOffset(details.localPosition),
+          onPanEnd: (details) => _stopHover(),
           child: MouseRegion(
             cursor: SystemMouseCursors.click,
             onEnter: (event) => _startHover(),
@@ -242,9 +240,10 @@ class _CarCardState extends State<CarCard>
     );
   }
 
+  /// 자동차 정보
   Widget _buildCarInfo() {
     Widget logo() {
-      final logo = Image.asset(widget.logoPath, width: _size.width * 0.08);
+      final logo = Image.asset(_logo.path, width: _size.width * 0.08);
 
       return Stack(
         children: [
@@ -281,9 +280,9 @@ class _CarCardState extends State<CarCard>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('${widget.year}'),
+              Text('$_year'),
               Text(
-                widget.name,
+                _name,
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
               ),
             ],
