@@ -1,6 +1,5 @@
-import 'package:car_3d_card_list/src/models/car_model.dart';
-import 'package:car_3d_card_list/src/screens/car_detail_screen.dart';
 import 'package:car_3d_card_list/src/screens/card_list_screen.dart';
+import 'package:car_3d_card_list/src/utils/responsive_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -42,16 +41,26 @@ class Car3DCardApp extends StatelessWidget {
         ScreenUtil.init(context);
 
         return MediaQuery.withNoTextScaling(
-          child: ResponsiveBreakpoints.builder(
-            breakpoints: [
-              const Breakpoint(start: 0, end: 450, name: MOBILE),
-              const Breakpoint(start: 451, end: 900, name: TABLET),
-              const Breakpoint(start: 901, end: double.infinity, name: DESKTOP),
-            ],
-            child: child!,
-          ),
+          child: _buildResponsiveLayout(child),
         );
       },
+    );
+  }
+
+  Widget _buildResponsiveLayout(Widget? child) {
+    final resolvedChild = Builder(
+      builder:
+          (context) =>
+              context.currentBreakpointName != null ? child! : SizedBox(),
+    );
+
+    return ResponsiveBreakpoints.builder(
+      breakpoints: [
+        const Breakpoint(start: 0, end: 450, name: MOBILE),
+        const Breakpoint(start: 451, end: 900, name: TABLET),
+        const Breakpoint(start: 901, end: double.infinity, name: DESKTOP),
+      ],
+      child: resolvedChild,
     );
   }
 }
