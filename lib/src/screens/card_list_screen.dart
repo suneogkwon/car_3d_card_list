@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:math' as math;
 
 import 'package:car_3d_card_list/src/models/car_model.dart';
@@ -71,7 +72,6 @@ class _CarListScreenState extends State<CarListScreen> {
     return Scaffold(
       appBar: AppBar(title: Text('3D Car Cards')),
       body: GridView.builder(
-        primary: false,
         padding: _gridPadding,
         gridDelegate: _gridDelegate,
         cacheExtent: 1,

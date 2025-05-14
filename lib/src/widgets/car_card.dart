@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as math;
 import 'dart:ui';
@@ -53,6 +54,12 @@ class _CarCardState extends State<CarCard>
 
   /// 자동차 풀네임
   String get _name => widget.car.name;
+
+  /// 실 카드 사이즈
+  Size get _actualSize => Size(
+    _size.width - _resolvedPadding.horizontal,
+    _size.height - _resolvedPadding.vertical,
+  );
 
   /// 카드의 그림자 효과
   /// 포인터 호버 여부에 따라 그림자 크기와 흐림 정도가 달라지고 포인터 위치에 따라 오프셋이 달라진다.
@@ -129,7 +136,7 @@ class _CarCardState extends State<CarCard>
       _size = context.size!;
 
       setState(() {
-        _centerOffset = Offset(_size.width / 2, _size.height / 2);
+        _centerOffset = Offset(_size.width, _size.height) / 2;
       });
     });
   }
@@ -214,33 +221,10 @@ class _CarCardState extends State<CarCard>
     );
   }
 
-  /// 포인터 감지 영역
-  Widget _buildPointerArea() {
-    return Padding(
-      padding: !_isHovered ? _resolvedPadding : EdgeInsets.zero,
-      child: ClipRRect(
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        borderRadius: _borderRadius,
-        child: GestureDetector(
-          onTap: widget.onTap,
-          onPanStart: (details) => _startHover(),
-          onPanUpdate: (details) => _updatePointerOffset(details.localPosition),
-          onPanEnd: (details) => _stopHover(),
-          child: MouseRegion(
-            cursor: SystemMouseCursors.click,
-            onEnter: (event) => _startHover(),
-            onExit: (event) => _stopHover(),
-            onHover: (event) => _updatePointerOffset(event.localPosition),
-          ),
-        ),
-      ),
-    );
-  }
-
   /// 자동차 정보
   Widget _buildCarInfo() {
     Widget logo() {
-      final logo = Image.asset(_logo.path, width: _size.width * 0.08);
+      final logo = Image.asset(_logo.path, fit: BoxFit.cover);
 
       return Stack(
         children: [
@@ -263,23 +247,58 @@ class _CarCardState extends State<CarCard>
     }
 
     Widget text() {
-      return Expanded(
-        child: DefaultTextStyle(
-          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-            shadows: [
-              Shadow(
-                color: Colors.black,
-                offset: const Offset(2, 2),
-                blurRadius: 4,
-              ),
-            ],
-          ),
-          child: Text(
-            _name,
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-          ),
+      final textPainter = TextPainter(
+        text: TextSpan(
+          text: _name,
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
         ),
+        textDirection: TextDirection.ltr,
+      )..layout();
+      final textWidth = textPainter.width;
+
+      final child = LayoutBuilder(
+        builder: (context, constraints) {
+          Widget text = Text(
+            _name,
+            softWrap: false,
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+              shadows: [
+                Shadow(
+                  color: Colors.black,
+                  offset: const Offset(2, 2),
+                  blurRadius: 4,
+                ),
+              ],
+            ),
+          );
+
+          if (constraints.maxWidth < textWidth && _isHovered) {
+            text = TweenAnimationBuilder(
+              duration: Duration(
+                seconds: (textWidth - constraints.maxWidth) ~/ 20,
+              ),
+              tween: AlignmentTween(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ),
+              builder:
+                  (_, value, child) => UnconstrainedBox(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    constrainedAxis: Axis.vertical,
+                    alignment: value,
+                    child: child,
+                  ),
+              child: text,
+            );
+          }
+
+          return text;
+        },
       );
+
+      return Expanded(child: child);
     }
 
     return Align(
@@ -290,10 +309,35 @@ class _CarCardState extends State<CarCard>
           duration: widget.duration,
           curve: widget.curve,
           alignment: Alignment.bottomLeft,
-          child: SizedBox(
-            height: _isHovered ? _size.width * 0.09 : 0,
-            width: _size.width,
+          child: Container(
+            height: _isHovered ? _actualSize.height * 0.25 : 0,
+            width: _actualSize.width,
+            padding: EdgeInsets.only(bottom: _actualSize.height * 0.02),
             child: Row(children: [logo(), SizedBox(width: 10), text()]),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 포인터 감지 영역
+  Widget _buildPointerArea() {
+    return Padding(
+      padding: !_isHovered ? _resolvedPadding : EdgeInsets.zero,
+      child: ClipRRect(
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        borderRadius: _borderRadius,
+        child: GestureDetector(
+          onTap: widget.onTap,
+          onLongPressStart: (details) => _startHover(),
+          onLongPressMoveUpdate:
+              (details) => _updatePointerOffset(details.localPosition),
+          onLongPressEnd: (details) => _stopHover(),
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            onEnter: (event) => _startHover(),
+            onExit: (event) => _stopHover(),
+            onHover: (event) => _updatePointerOffset(event.localPosition),
           ),
         ),
       ),
