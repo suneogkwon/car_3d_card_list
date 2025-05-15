@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:car_3d_card_list/src/screens/card_list_screen.dart';
 import 'package:car_3d_card_list/src/utils/responsive_util.dart';
 import 'package:flutter/material.dart';
@@ -30,20 +32,22 @@ class Car3DCardApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: '3D Car Card',
-      home: CarListScreen(),
-      themeMode: ThemeMode.dark,
-      theme: ThemeData.light(),
-      darkTheme: _darkTheme,
-      builder: (context, child) {
-        ScreenUtil.init(context);
+    log('mediaQuery : ${MediaQuery.of(context)}');
 
-        return MediaQuery.withNoTextScaling(
-          child: _buildResponsiveLayout(child),
-        );
-      },
+    return MediaQuery.withNoTextScaling(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: '3D Car Card',
+        theme: ThemeData.light(),
+        darkTheme: _darkTheme,
+        themeMode: ThemeMode.dark,
+        home: CarListScreen(),
+        builder: (context, child) {
+          ScreenUtil.init(context);
+
+          return _buildResponsiveLayout(child);
+        },
+      ),
     );
   }
 

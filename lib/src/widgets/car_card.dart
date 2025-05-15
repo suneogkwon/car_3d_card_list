@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as math;
 import 'dart:ui';
@@ -8,25 +7,13 @@ import 'package:flutter/material.dart';
 
 /// 3D 자동차 카드 위젯
 class CarCard extends StatefulWidget {
-  const CarCard({
-    super.key,
-    required this.car,
-    this.onTap,
-    this.duration = const Duration(milliseconds: 400),
-    this.curve = Curves.linearToEaseOut,
-  });
+  const CarCard({super.key, required this.car, this.onTap});
 
   /// 자동차 모델
   final CarModel car;
 
   /// 카드 클릭 시 호출되는 콜백
   final VoidCallback? onTap;
-
-  /// 카드 애니메이션 지속 시간
-  final Duration duration;
-
-  /// 카드 애니메이션 곡선
-  final Curve curve;
 
   @override
   State<CarCard> createState() => _CarCardState();
@@ -39,6 +26,9 @@ class _CarCardState extends State<CarCard>
 
   /// 호버 시 카드 크기 증가량
   final _hoverScaleIncrement = 0.12;
+
+  final _duration = Duration(milliseconds: 400);
+  final _curve = Curves.linearToEaseOut;
 
   Size _size = Size.zero;
   Offset _centerOffset = Offset.zero;
@@ -178,8 +168,8 @@ class _CarCardState extends State<CarCard>
     }
 
     return AnimatedContainer(
-      duration: widget.duration,
-      curve: widget.curve,
+      duration: _duration,
+      curve: _curve,
       margin: _resolvedPadding,
       decoration: BoxDecoration(
         borderRadius: _borderRadius,
@@ -196,12 +186,12 @@ class _CarCardState extends State<CarCard>
         transform: _resolvedTransform,
         alignment: Alignment.center,
         child: AnimatedScale(
-          duration: widget.duration,
-          curve: widget.curve,
+          duration: _duration,
+          curve: _curve,
           scale: _resolvedScale,
           child: AnimatedContainer(
-            duration: widget.duration,
-            curve: widget.curve,
+            duration: _duration,
+            curve: _curve,
             clipBehavior: Clip.antiAliasWithSaveLayer,
             decoration: BoxDecoration(borderRadius: _borderRadius),
             foregroundDecoration: BoxDecoration(
@@ -306,8 +296,8 @@ class _CarCardState extends State<CarCard>
       child: Padding(
         padding: _resolvedPadding,
         child: AnimatedSize(
-          duration: widget.duration,
-          curve: widget.curve,
+          duration: _duration,
+          curve: _curve,
           alignment: Alignment.bottomLeft,
           child: Container(
             height: _isHovered ? _actualSize.height * 0.25 : 0,
